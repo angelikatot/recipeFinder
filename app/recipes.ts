@@ -42,14 +42,26 @@ export async function fetchRecipeDetail(id: number): Promise<Recipe | null> {
       throw new Error(`API request failed with status ${res.status}`);
     }
     
-    const recipe = await res.json();
+    const data = await res.json();
     
     return {
-      id: recipe.id,
-      title: recipe.title,
-      image: recipe.image,
-      summary: recipe.summary,
-      // + other fields later
+      id: data.id,
+      title: data.title,
+      image: data.image,
+      summary: data.summary,
+      readyInMinutes: data.readyInMinutes,
+      servings: data.servings,
+      // get ingredients from extendedIngredients
+      ingredients: data.extendedIngredients?.map((ingredient: any) => ({
+        id: ingredient.id,
+        name: ingredient.name,
+        amount: ingredient.amount,
+        unit: ingredient.unit,
+        original: ingredient.original,
+        image: ingredient.image ? `https://spoonacular.com/cdn/ingredients_100x100/${ingredient.image}` : undefined
+      })),
+      // get  instructions
+      instructions: data.instructions
     };
     
   } catch (error) {
