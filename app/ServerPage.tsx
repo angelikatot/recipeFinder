@@ -1,30 +1,44 @@
-//Ottaa hakusanan osoiteriviltä (esimerkiksi ?query=chicken).
-// Hakee reseptit Spoonacularin API:sta tämän hakusanan perusteella.
-// Näyttää reseptit sivulla 
-// toimii palvelimella, ei selaimessa:  data (reseptit) haetaan ennen kuin sivu lähetetään käyttäjälle.-
-//  sivun näyttäminen nopeampaa ja hakukoneystävällisempi.
-
 import { fetchRecipes } from './recipes';
-import { use } from 'react';
+import { Recipe } from './types';
+import Link from 'next/link';
+import RecipeImage from './RecipeImage';
 
-const ServerPage = ({ searchParams }: { searchParams: Promise<{ query?: string }> }) => {
-  const { query } = use(searchParams);
-  const searchQuery = query || 'chicken'; // Default search term
-  const recipes = use(fetchRecipes(searchQuery));
+// define  props type
+interface ServerPageProps {
+  searchParams: Promise<{ query?: string }> | { query?: string };
+}
 
+const ServerPage = async ({ searchParams }: ServerPageProps) => {
+  // Await searchParams if it's a Promise
+  const resolvedParams = await (searchParams instanceof Promise ? searchParams : Promise.resolve(searchParams));
+  
+  // Now safely use the properties
+  const searchQuery = resolvedParams.query || 'chicken'; // default search term
+  
+  // Fetch recipes
+  const recipes = await fetchRecipes(searchQuery);
+  
   return (
     <div>
-      {recipes.length === 0 ? (
-        <p>No recipes found</p>
-      ) : (
-        recipes.map((recipe) => (
-          <div key={recipe.id}>
-            <h2>{recipe.title}</h2>
-            <img src={recipe.image} alt={recipe.title} width="200" />
-            <p>{recipe.summary}</p>
-          </div>
-        ))
-      )}
+      <h2>Recipes for "{searchQuery}"</h2>
+      <div className="recipe-grid">
+        {recipes.length === 0 ? (
+          <p>No recipes found</p>
+        ) : (
+          recipes.map((recipe: Recipe) => (
+            <Link href={`/recipe/${recipe.id}`} key={recipe.id} className="recipe-card">
+              <h2>{recipe.title}</h2>
+              <div className="image-container">
+                <RecipeImage 
+                  src={recipe.image} 
+                  alt={recipe.title} 
+                  width={200}
+                />
+              </div>
+            </Link>
+          ))
+        )}
+      </div>
     </div>
   );
 };
