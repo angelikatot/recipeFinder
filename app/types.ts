@@ -1,4 +1,4 @@
-// type definition
+// type definition, separating recipe and ingredient types
 export interface Recipe {
   id: number;
   title: string;

@@ -1,3 +1,5 @@
+// server component, gets recipe data before sending it to client
+
 import { fetchRecipes } from './recipes';
 import { Recipe } from './types';
 import Link from 'next/link';
@@ -13,7 +15,7 @@ const ServerPage = async ({ searchParams }: ServerPageProps) => {
   const resolvedParams = await (searchParams instanceof Promise ? searchParams : Promise.resolve(searchParams));
   
   // Now safely use the properties
-  const searchQuery = resolvedParams.query || 'chicken'; // default search term
+  const searchQuery = resolvedParams.query || 'soup'; // default search term
   
   // Fetch recipes
   const recipes = await fetchRecipes(searchQuery);

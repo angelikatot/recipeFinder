@@ -17,7 +17,7 @@ const RecipeImage = ({ src, alt, width, height, className }: RecipeImageProps) =
 
   const handleError = () => {
     setImgError(true);
-    setImgSrc('/placeholder-recipe.jpg'); // this image in my public folder
+    setImgSrc('/placeholder-recipe.jpg'); // this image in my public folder, i use it as placeholder for recipes without a pic
   };
 
   return (

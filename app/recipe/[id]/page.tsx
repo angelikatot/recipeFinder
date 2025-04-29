@@ -1,50 +1,54 @@
-// dynamic route page that shows detailed information about a specific recipe when users click on a recipe card
-// app/recipe/[id]/page.tsx
+// dynamic route page: näyttää tietyn reseptin tiedot kun käyttäjä klikkaa reseptiä
 
+import { fetchRecipeDetail } from '@/app/recipes'; // haetaan  reseptin tiedot
+import Link from 'next/link'; // link navigointiin
+import { notFound } from 'next/navigation'; //  404-sivu jos dataa ei löydy
+import RecipeImage from '@/app/RecipeImage'; // kuva niille resepteille joilla ei ole APIssa kuva
 
-import { fetchRecipeDetail } from '@/app/recipes';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import RecipeImage from '@/app/RecipeImage';
-
-// Define the component props
+// komponentin props-tyyppi: odotetaan id(merkkijono)
 interface RecipePageProps {
   params: Promise<{ id: string }> | { id: string };
 }
 
-// Server Component for recipe details
+// server component joka näyttää reseptin tiedot, odotetaan mahdollinen Promise (kun käsitellään async funktio)
 export default async function RecipePage({ params }: RecipePageProps) {
-  // Await params if it's a Promise
   const resolvedParams = await (params instanceof Promise ? params : Promise.resolve(params));
   
-  const recipeId = parseInt(resolvedParams.id);
+  const recipeId = parseInt(resolvedParams.id); // muutetaan ID numeroksi, näytetään 404 jos error
   
-  // Handle invalid IDs
+  
   if (isNaN(recipeId)) {
     notFound();
   }
-  
+
+  // haetaan reseptin tiedot palvelimelta (SSR: server-side rendering)
   const recipe = await fetchRecipeDetail(recipeId);
   
-  // Handle recipe not found
+  
   if (!recipe) {
     notFound();
   }
   
   return (
     <div className="container">
-      <Link href="/" className="back-button">← Back to Search</Link>
+      {/* Linkki takaisin hakusivulle */}
+      <Link href="/" className="back-button">← Takaisin hakuun</Link>
+      
       <div className="recipe-detail">
         <div className="recipe-header">
           <h1>{recipe.title}</h1>
+
+          {/* Aika ja annokset */}
           <div className="recipe-meta">
             {recipe.readyInMinutes && (
-              <span className="meta-item">🕒 {recipe.readyInMinutes} minutes</span>
+              <span className="meta-item">🕒 {recipe.readyInMinutes} minuuttia</span>
             )}
             {recipe.servings && (
-              <span className="meta-item">👥 {recipe.servings} servings</span>
+              <span className="meta-item">👥 {recipe.servings} annosta</span>
             )}
           </div>
+
+          {/* Reseptin kuva */}
           <RecipeImage
             src={recipe.image}
             alt={recipe.title}
@@ -53,18 +57,19 @@ export default async function RecipePage({ params }: RecipePageProps) {
         </div>
         
         <div className="recipe-content">
-          {/* Summary Section */}
+          {/* Yhteenveto */}
           <section className="recipe-section">
-            <h2>About this Recipe</h2>
+            <h2>Reseptin kuvaus</h2>
             <div className="recipe-summary">
+              {/* HTML-muotoinen teksti renderöidään turvallisesti */}
               <div dangerouslySetInnerHTML={{ __html: recipe.summary }} />
             </div>
           </section>
           
-          {/* Ingredients Section */}
+          {/* Ainekset */}
           {recipe.ingredients && recipe.ingredients.length > 0 && (
             <section className="recipe-section">
-              <h2>Ingredients</h2>
+              <h2>Ainekset</h2>
               <ul className="ingredients-list">
                 {recipe.ingredients.map((ingredient, index) => (
                   <li key={index} className="ingredient-item">
@@ -86,10 +91,10 @@ export default async function RecipePage({ params }: RecipePageProps) {
             </section>
           )}
           
-          {/* Instructions Section */}
+          {/* Valmistusohjeet */}
           {recipe.instructions && (
             <section className="recipe-section">
-              <h2>Instructions</h2>
+              <h2>Valmistusohjeet</h2>
               <div
                 className="recipe-instructions"
                 dangerouslySetInnerHTML={{ __html: recipe.instructions }}
@@ -101,3 +106,5 @@ export default async function RecipePage({ params }: RecipePageProps) {
     </div>
   );
 }
+
+
