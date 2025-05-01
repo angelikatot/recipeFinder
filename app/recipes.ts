@@ -13,22 +13,21 @@ export async function fetchRecipes(query: string): Promise<Recipe[]> {
     const data = await res.json();
     
     if (!data.results) {
-      return []; 
+      return [];
     }
     
-    // Filter out recipes without images
-    return data.results
-      .filter((recipe: any) => recipe.image && !recipe.image.includes('null'))
-      .map((recipe: any) => ({
-        id: recipe.id,
-        title: recipe.title,
-        image: recipe.image,
-        summary: recipe.summary || "",
-      }));
-      
+    // map all recipes 
+    return data.results.map((recipe: any) => ({
+      id: recipe.id,
+      title: recipe.title,
+      // default image or empty string if no image is available
+      image: recipe.image || "",
+      summary: recipe.summary || "",
+    }));
+    
   } catch (error) {
     console.error('Error fetching recipes:', error);
-    return []; 
+    return [];
   }
 }
 
@@ -47,7 +46,7 @@ export async function fetchRecipeDetail(id: number): Promise<Recipe | null> {
     return {
       id: data.id,
       title: data.title,
-      image: data.image,
+      image: data.image || "", // when picture is missing
       summary: data.summary,
       readyInMinutes: data.readyInMinutes,
       servings: data.servings,
@@ -60,7 +59,7 @@ export async function fetchRecipeDetail(id: number): Promise<Recipe | null> {
         original: ingredient.original,
         image: ingredient.image ? `https://spoonacular.com/cdn/ingredients_100x100/${ingredient.image}` : undefined
       })),
-      // get  instructions
+      // get instructions
       instructions: data.instructions
     };
     

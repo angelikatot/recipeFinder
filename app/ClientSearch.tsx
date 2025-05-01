@@ -1,16 +1,16 @@
-// Näyttää hakukentän ja napin.Kun käyttäjä kirjoittaa hakusanan ja painaa nappia, hakusana lisätään osoiteriville (URL).
-
+// Näyttää hakukentän ja napin
+  //Kun käyttäjä painaa nappia - selain ohjataan uuteen URL-osoitteeseen, mm. /?query=pizza.
+//Toinen komponentti ( ServerPage) hakee reseptit ja näyttää ne sen mukaan
 'use client';
-//alussa lukee 'use client', jotta Next.js tietää, 
-// että komponentti käyttää esimerkiksi Reactin useState-ominaisuuksia, jotka toimivat vain selaimessa
+//alussa lukee 'use client', jotta Next.js tietää, että tämä on client komponentti (eikä server)
 
 
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react'; // Reactin tilahookki (useState)
+import { useRouter } from 'next/navigation'; // reititys työkalu
 
 const ClientSearch = () => {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(''); // kayttajan syottama hakusana
   const router = useRouter();
   
   const handleSearch = (e: React.FormEvent) => {
@@ -19,7 +19,9 @@ const ClientSearch = () => {
       router.push(`/?query=${encodeURIComponent(query.trim())}`);
     }
   };
-  
+
+
+
   return (
     <form onSubmit={handleSearch} className="search-form">
       <input

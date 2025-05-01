@@ -14,7 +14,7 @@ const ServerPage = async ({ searchParams }: ServerPageProps) => {
   // Await searchParams if it's a Promise
   const resolvedParams = await (searchParams instanceof Promise ? searchParams : Promise.resolve(searchParams));
   
-  // Now safely use the properties
+  
   const searchQuery = resolvedParams.query || 'soup'; // default search term
   
   // Fetch recipes

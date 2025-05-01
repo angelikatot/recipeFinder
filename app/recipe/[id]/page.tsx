@@ -31,7 +31,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
   
   return (
     <div className="container">
-      {/* Linkki takaisin hakusivulle */}
+      {/* linkki takaisin hakusivulle */}
       <Link href="/" className="back-button">← Takaisin hakuun</Link>
       
       <div className="recipe-detail">
@@ -41,10 +41,10 @@ export default async function RecipePage({ params }: RecipePageProps) {
           {/* Aika ja annokset */}
           <div className="recipe-meta">
             {recipe.readyInMinutes && (
-              <span className="meta-item">🕒 {recipe.readyInMinutes} minuuttia</span>
+              <span className="meta-item">🕒 {recipe.readyInMinutes} minutes</span>
             )}
             {recipe.servings && (
-              <span className="meta-item">👥 {recipe.servings} annosta</span>
+              <span className="meta-item">👥 {recipe.servings} portions</span>
             )}
           </div>
 
@@ -59,7 +59,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
         <div className="recipe-content">
           {/* Yhteenveto */}
           <section className="recipe-section">
-            <h2>Reseptin kuvaus</h2>
+            <h2>Recipe</h2>
             <div className="recipe-summary">
               {/* HTML-muotoinen teksti renderöidään turvallisesti */}
               <div dangerouslySetInnerHTML={{ __html: recipe.summary }} />
@@ -69,7 +69,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
           {/* Ainekset */}
           {recipe.ingredients && recipe.ingredients.length > 0 && (
             <section className="recipe-section">
-              <h2>Ainekset</h2>
+              <h2>Ingredients</h2>
               <ul className="ingredients-list">
                 {recipe.ingredients.map((ingredient, index) => (
                   <li key={index} className="ingredient-item">
@@ -94,7 +94,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
           {/* Valmistusohjeet */}
           {recipe.instructions && (
             <section className="recipe-section">
-              <h2>Valmistusohjeet</h2>
+              <h2>Instructions</h2>
               <div
                 className="recipe-instructions"
                 dangerouslySetInnerHTML={{ __html: recipe.instructions }}
