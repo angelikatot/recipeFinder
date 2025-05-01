@@ -18,7 +18,7 @@ RecipeFinder is a web app built with **Next.js** and **TypeScript** that allows 
 - [Next.js](https://nextjs.org/) – React framework for server-rendered apps
 - [TypeScript](https://www.typescriptlang.org/) – Type-safe JavaScript
 - [Spoonacular API](https://spoonacular.com/food-api) – Recipe and food data
-
+- [Docker]
 ## 📦 Installation
 
 1. **Clone the repo:**
